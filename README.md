@@ -105,4 +105,18 @@ However they are simple and may be generated (in the future).
 		
 		System.out.println(newOne.a + " " + newOne.b + " " + newOne.c);
 	}
-	```
+```
+
+Here is generated XML
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<ExampleOne>
+	<a>
+		7
+	</a>
+	<b>
+		8
+	</b>
+</ExampleOne>
+```
