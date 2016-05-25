@@ -10,7 +10,7 @@ Controlled Java Objects (De)Serialization from/to XML
 ### Examples:  
 
 Here is a class to which we want add XML serialization support 
-```
+```Java
 class ExampleOne {  
   private int a;  
   private int b;
@@ -22,7 +22,7 @@ class ExampleOne {
 This class is used to serialize to XML
 
 
-```
+```Java
 class ExampleOneXML extends XML_PropertiesObject {
 
 		public ExampleOneXML() {
@@ -51,7 +51,7 @@ class ExampleOneXML extends XML_PropertiesObject {
 
 This class is used to deserialize from XML
 	
-```
+```Java
 	class ExampleOneXmlSupport implements XML_Support {
 		private ExampleOne exampleOne;
 
@@ -84,7 +84,7 @@ The two classes above seems big compared to class we want to serialize.
 However they are simple and may be generated (in the future).
 
 
-```
+```Java
 	public static void main(String[] args) {
 		ExampleOne ex = new ExampleOne();
 
@@ -109,7 +109,7 @@ However they are simple and may be generated (in the future).
 
 Here is generated XML
 
-```
+```XML
 <?xml version="1.0" encoding="UTF-8"?>
 <ExampleOne>
 	<a>
