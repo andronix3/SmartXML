@@ -5,7 +5,6 @@
  */
 package com.smartg.xml;
 
-import data.SelectedProduct;
 import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -39,7 +38,7 @@ public class XML_PropertyField implements XML_Property {
         try {
             return field.get(obj).toString();
         } catch (IllegalArgumentException | IllegalAccessException ex) {
-            Logger.getLogger(SelectedProduct.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
@@ -62,7 +61,7 @@ public class XML_PropertyField implements XML_Property {
                 field.set(obj, value);
             }
         } catch (IllegalArgumentException | IllegalAccessException ex) {
-            Logger.getLogger(SelectedProduct.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
         return this;
     }
