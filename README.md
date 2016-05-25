@@ -49,7 +49,7 @@ class ExampleOneXML extends XML_PropertiesObject {
 	}
 ```
 
-	This class is used to deserialize from XML
+This class is used to deserialize from XML
 	
 ```
 	class ExampleOneXmlSupport implements XML_Support {
