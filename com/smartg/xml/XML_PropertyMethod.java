@@ -41,6 +41,7 @@ public class XML_PropertyMethod implements XML_Property {
             return (String) getter.invoke(obj, (Object[]) null);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(XML_PropertyMethod.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         return null;
     }

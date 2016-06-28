@@ -17,25 +17,25 @@ import javax.swing.ListModel;
  *
  * @author andro
  */
-public class XML_PropertiesJList extends XML_Properties {
+public class XML_PropertiesJList<T> extends XML_Properties {
 
     private final List<XML_Property> values = new ArrayList<>();
 
-    private final JList list;
-    private final DefaultListModel model;
+    private final JList<T> list;
+    private final DefaultListModel<T> model;
 
     public XML_PropertiesJList(String name) {
         super(name);
         this.model = new DefaultListModel<>();
-        this.list = new JList(this.model);
+        this.list = new JList<T>(this.model);
     }
 
-    public XML_PropertiesJList(String name, String propertyName, JList list) {
+    public XML_PropertiesJList(String name, String propertyName, JList<T> list) {
         super(name);
         this.list = list;
-        ListModel m = list.getModel();
+        ListModel<T> m = list.getModel();
 
-        this.model = new DefaultListModel();
+        this.model = new DefaultListModel<T>();
         int size = m.getSize();
         for (int i = 0; i < size; i++) {
             setProperty(propertyName, m.getElementAt(i));
@@ -48,7 +48,7 @@ public class XML_PropertiesJList extends XML_Properties {
         XML_Property prop = create(name);
         prop.setValue(value);
         values.add(prop);
-        model.addElement(prop.getValue());
+        model.addElement((T) prop.getValue());
         return prop;
     }
 
@@ -76,5 +76,4 @@ public class XML_PropertiesJList extends XML_Properties {
     public boolean isEmpty() {
         return values.isEmpty();
     }
-
 }

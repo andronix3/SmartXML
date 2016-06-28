@@ -5,33 +5,65 @@
  */
 package com.smartg.xml;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  *
  * @author andro
  */
-public class XML_PropertiesMap extends XML_Properties implements Map {
+public abstract class XML_PropertiesMap extends XML_Properties {
 
-    private final Map map;
+    private final Map<String, String> map;
+    private final ArrayList<XML_Property> properties = new ArrayList<>();
+    private Object key;
 
-    public XML_PropertiesMap(String name, Map map) {
-        super(name);
-        this.map = map;
+    public XML_PropertiesMap(String name) {
+        this(name, null);
     }
+
+    public XML_PropertiesMap(String name, Map<String, String> map) {
+        super(name);
+        if (map != null) {
+            this.map = map;
+            map.entrySet().stream().forEach(this::addToList);
+        } else {
+            this.map = new LinkedHashMap<>();
+        }
+    }
+
+    private void addToList(Map.Entry<String, String> t) {
+        properties.add(new XML_PropertySimple(getKeyName()).setValue(t.getKey()));
+        properties.add(new XML_PropertySimple(getValueName()).setValue(t.getValue()));
+    }
+
+    protected abstract String getKeyName();
+
+    protected abstract String getValueName();
 
     @Override
     public XML_Property setProperty(String name, Object value) {
-        XML_Property prop = super.setProperty(name, value);
-
-        Object obj = map.get(name);
-        if (obj == null || !obj.equals(value)) {
-            map.put(name, value);
+        if (getKeyName().equals(name)) {
+            XML_Property prop = new XML_PropertySimple(name);
+            prop.setValue(value);
+            properties.add(prop);
+            key = value;
+            return prop;
+        } else if (getValueName().equals(name)) {
+            XML_Property prop = new XML_PropertySimple(name);
+            prop.setValue(value);
+            properties.add(prop);
+            map.put(String.valueOf(key), String.valueOf(value));
+            return prop;
         }
-        return prop;
+        return null;
+    }
+
+    @Override
+    public Iterator<XML_Property> iterator() {
+        return properties.iterator();
     }
 
     @Override
@@ -40,82 +72,12 @@ public class XML_PropertiesMap extends XML_Properties implements Map {
     }
 
     @Override
-    public XML_Property setValue(Object value) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int size() {
-        return map.size();
-    }
-
-    @Override
     public boolean isEmpty() {
         return map.isEmpty();
-    }
-
-    @Override
-    public boolean containsKey(Object key) {
-        return map.containsKey(key);
-    }
-
-    @Override
-    public boolean containsValue(Object value) {
-        return map.containsValue(value);
-    }
-
-    @Override
-    public Object get(Object key) {
-        return map.get(key);
-    }
-
-    @Override
-    public Object put(Object key, Object value) {
-        setProperty(String.valueOf(key), value);
-        return map.put(String.valueOf(key), value);
-    }
-
-    @Override
-    public Object remove(Object key) {
-        XML_MAP.remove(key);
-        return map.remove(key);
-    }
-
-    @Override
-    public void putAll(Map m) {
-        map.putAll(m);
-        Set<Map.Entry> entrySet = m.entrySet();
-        Iterator<Map.Entry> iter = entrySet.iterator();
-        while (iter.hasNext()) {
-            Map.Entry next = iter.next();
-            setProperty(next.getKey().toString(), next.getValue());
-        }
-    }
-
-    @Override
-    public void clear() {
-        map.clear();
-        XML_MAP.clear();
-    }
-
-    @Override
-    public Set keySet() {
-        return map.keySet();
-    }
-
-    @Override
-    public Collection values() {
-        return map.values();
-    }
-
-    @Override
-    public Set entrySet() {
-        return map.entrySet();
     }
 
     @Override
     public Object getObject() {
         return map;
     }
-
 }
