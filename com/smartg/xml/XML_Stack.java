@@ -21,7 +21,7 @@ public class XML_Stack {
     private final Stack<XML_Property> stack = new Stack<>();
     private XML_Property lastObject;
 
-    public void register(String name, Class cls) {
+    public void register(String name, Class<?> cls) {
         map.put(name, cls);
     }
 
