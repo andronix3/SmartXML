@@ -16,6 +16,7 @@ import javax.swing.ListModel;
 /**
  *
  * @author andro
+ * @param <T>
  */
 public class XML_PropertiesJList<T> extends XML_Properties {
 
@@ -27,7 +28,7 @@ public class XML_PropertiesJList<T> extends XML_Properties {
     public XML_PropertiesJList(String name) {
         super(name);
         this.model = new DefaultListModel<>();
-        this.list = new JList<T>(this.model);
+        this.list = new JList<>(this.model);
     }
 
     public XML_PropertiesJList(String name, String propertyName, JList<T> list) {
@@ -35,7 +36,7 @@ public class XML_PropertiesJList<T> extends XML_Properties {
         this.list = list;
         ListModel<T> m = list.getModel();
 
-        this.model = new DefaultListModel<T>();
+        this.model = new DefaultListModel<>();
         int size = m.getSize();
         for (int i = 0; i < size; i++) {
             setProperty(propertyName, m.getElementAt(i));

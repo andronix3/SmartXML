@@ -14,24 +14,41 @@ import java.util.Map;
  *
  * @author andro
  */
-public abstract class XML_PropertiesMap extends XML_Properties {
+public class XML_PropertiesMap extends XML_Properties {
 
-    private final Map<String, String> map;
+    private Map<String, String> map;
     private final ArrayList<XML_Property> properties = new ArrayList<>();
     private Object key;
+    protected String keyName;
+    protected String valueName;
 
-    public XML_PropertiesMap(String name) {
+    protected XML_PropertiesMap(String name) {
         this(name, null);
     }
 
-    public XML_PropertiesMap(String name, Map<String, String> map) {
+    protected XML_PropertiesMap(String name, Map<String, String> map) {
         super(name);
-        if (map != null) {
-            this.map = map;
-            map.entrySet().stream().forEach(this::addToList);
+        setMap(map);
+    }
+
+    private void setMap(Map<String, String> m) {
+        if (m != null) {
+            this.map = m;
+            m.entrySet().stream().forEach(this::addToList);
         } else {
             this.map = new LinkedHashMap<>();
         }
+    }
+
+    public XML_PropertiesMap(String name, String keyName, String valueName) {
+        this(name, null, keyName, valueName);
+    }
+    
+    public XML_PropertiesMap(String name, Map<String, String> map, String keyName, String valueName) {
+        super(name);
+        this.keyName = keyName;
+        this.valueName = valueName;
+        setMap(map);
     }
 
     private void addToList(Map.Entry<String, String> t) {
@@ -39,9 +56,13 @@ public abstract class XML_PropertiesMap extends XML_Properties {
         properties.add(new XML_PropertySimple(getValueName()).setValue(t.getValue()));
     }
 
-    protected abstract String getKeyName();
+    protected String getKeyName() {
+        return keyName;
+    }
 
-    protected abstract String getValueName();
+    protected String getValueName() {
+        return valueName;
+    }
 
     @Override
     public XML_Property setProperty(String name, Object value) {

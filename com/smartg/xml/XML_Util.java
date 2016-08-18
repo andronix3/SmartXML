@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package com.smartg.xml;
-
+import java.util.Map;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -80,15 +80,15 @@ public class XML_Util {
         Objects.requireNonNull(elementClass);
         XML_Stack stack = new XML_Stack();
         stack.register(elementName, elementClass);
-        
+
         return parseXml(input, elementName, stack);
     }
-    
-        public static XML_Properties parseXml(String input, String elementName, XML_Support xmlSupport) {
+
+    public static XML_Properties parseXml(String input, String elementName, XML_Support xmlSupport) {
         Objects.requireNonNull(xmlSupport);
         XML_Stack stack = new XML_Stack();
         stack.register(elementName, xmlSupport);
-        
+
         return parseXml(input, elementName, stack);
     }
 
@@ -118,7 +118,7 @@ public class XML_Util {
                 }
             }
         } catch (XMLStreamException e) {
-            Logger.getLogger(XML_Util.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getGlobal().log(Level.SEVERE, null, e);
         }
         XML_Properties lastObject = (XML_Properties) stack.getLastObject();
         return lastObject;

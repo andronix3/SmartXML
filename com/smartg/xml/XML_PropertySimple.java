@@ -5,6 +5,8 @@
  */
 package com.smartg.xml;
 
+import java.util.Objects;
+
 /**
  *
  * @author andro
@@ -15,7 +17,7 @@ public class XML_PropertySimple implements XML_Property {
     private Object value;
 
     public XML_PropertySimple(String name) {
-        this.name = name;
+        this.name = Objects.requireNonNull(name);
     }
 
     @Override
