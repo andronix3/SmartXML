@@ -4,14 +4,14 @@
  * and open the template in the editor.
  */
 package com.smartg.xml;
-import java.util.Map;
+
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -90,6 +90,38 @@ public class XML_Util {
         stack.register(elementName, xmlSupport);
 
         return parseXml(input, elementName, stack);
+    }
+
+    public static Map xmlToMap(String input, String name) {
+        XML_PropertiesMap xmlProperties = new XML_PropertiesMap(name, "key", "value");
+        XML_SupportMap support = new XML_SupportMap(xmlProperties);
+        parseXml(input, name, support);
+        return (Map) xmlProperties.getObject();
+    }
+    
+    public static String mapToXml(String name, Map<String, String> map) {
+        XML_PropertiesMap xmlProperties = new XML_PropertiesMap(name, map, "key", "value");
+        String toXml = toXml(xmlProperties);
+        return toXml;
+    }
+
+    private static class XML_SupportMap implements XML_Support {
+
+        private final XML_PropertiesMap xmlMap;
+
+        public XML_SupportMap(XML_PropertiesMap xmlMap) {
+            this.xmlMap = xmlMap;
+        }
+
+        @Override
+        public XML_Properties create() {
+            return xmlMap;
+        }
+
+        @Override
+        public XML_Properties create(String name) {
+            return xmlMap;
+        }
     }
 
     private static XML_Properties parseXml(String input, String elementName, XML_Stack stack) {
