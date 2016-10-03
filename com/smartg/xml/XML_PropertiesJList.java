@@ -18,7 +18,7 @@ import javax.swing.ListModel;
  * @author andro
  * @param <T>
  */
-public class XML_PropertiesJList<T> extends XML_Properties {
+public class XML_PropertiesJList<T> extends XML_PropertiesImpl {
 
     private final List<XML_Property> values = new ArrayList<>();
 
@@ -61,11 +61,6 @@ public class XML_PropertiesJList<T> extends XML_Properties {
     @Override
     public Object getValue() {
         return Collections.unmodifiableList(values);
-    }
-
-    @Override
-    public Object getObject() {
-        return list;
     }
 
     @Override

@@ -5,24 +5,17 @@
  */
 package com.smartg.xml;
 
-import java.util.Objects;
-
 /**
  *
  * @author andro
  */
-public class XML_PropertySimple implements XML_Property {
+public class XML_PropertyInteger implements XML_Property {
 
     private final String name;
-    private Object value;
+    private Integer value;
 
-    public XML_PropertySimple(String name) {
-        this.name = Objects.requireNonNull(name);
-    }
-
-    public XML_PropertySimple(String name, Object value) {
+    public XML_PropertyInteger(String name) {
         this.name = name;
-        this.value = value;
     }
 
     @Override
@@ -31,13 +24,13 @@ public class XML_PropertySimple implements XML_Property {
     }
 
     @Override
-    public Object getValue() {
+    public Integer getValue() {
         return value;
     }
 
     @Override
     public XML_Property setValue(Object value) {
-        this.value = value;
+        this.value = new Integer(String.valueOf(value));
         return this;
     }
 

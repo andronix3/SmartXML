@@ -5,6 +5,7 @@
  */
 package com.smartg.xml;
 
+import data.SelectedProductsList;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -96,7 +97,7 @@ public class XML_Util {
         XML_PropertiesMap xmlProperties = new XML_PropertiesMap(name, "key", "value");
         XML_SupportMap support = new XML_SupportMap(xmlProperties);
         parseXml(input, name, support);
-        return (Map) xmlProperties.getObject();
+        return (Map) xmlProperties.getValue();
     }
     
     public static String mapToXml(String name, Map<String, String> map) {
@@ -150,7 +151,7 @@ public class XML_Util {
                 }
             }
         } catch (XMLStreamException e) {
-            Logger.getGlobal().log(Level.SEVERE, null, e);
+            Logger.getLogger(SelectedProductsList.class.getName()).log(Level.SEVERE, null, e);
         }
         XML_Properties lastObject = (XML_Properties) stack.getLastObject();
         return lastObject;

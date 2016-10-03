@@ -17,6 +17,7 @@ import javax.xml.stream.XMLStreamWriter;
 public interface XML_Property extends Cloneable {
     String getName();
     Object getValue();
+    
     /**
      * Set value of XML_Property
      * @param value

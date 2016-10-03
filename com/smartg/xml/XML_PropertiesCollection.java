@@ -16,7 +16,7 @@ import java.util.List;
  * @author andro
  * @param <T>
  */
-public class XML_PropertiesCollection<T> extends XML_Properties {
+public class XML_PropertiesCollection<T> extends XML_PropertiesImpl {
 
     private final List<XML_Property> values = new ArrayList<>();
     private final Collection<T> list;
@@ -68,13 +68,7 @@ public class XML_PropertiesCollection<T> extends XML_Properties {
     }
 
     @Override
-    public Object getObject() {
-        return list;
-    }
-
-    @Override
     public boolean isEmpty() {
         return values.isEmpty();
     }
-
 }

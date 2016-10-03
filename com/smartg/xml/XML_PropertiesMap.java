@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * @author andro
  */
-public class XML_PropertiesMap extends XML_Properties {
+public class XML_PropertiesMap extends XML_PropertiesImpl {
 
     private Map<String, String> map;
     private final ArrayList<XML_Property> properties = new ArrayList<>();
@@ -95,10 +95,5 @@ public class XML_PropertiesMap extends XML_Properties {
     @Override
     public boolean isEmpty() {
         return map.isEmpty();
-    }
-
-    @Override
-    public Object getObject() {
-        return map;
     }
 }

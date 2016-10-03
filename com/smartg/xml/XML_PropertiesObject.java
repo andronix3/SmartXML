@@ -9,7 +9,7 @@ package com.smartg.xml;
  *
  * @author andro
  */
-public class XML_PropertiesObject extends XML_Properties {
+public class XML_PropertiesObject extends XML_PropertiesImpl {
 
     private final Object object;
 
@@ -53,10 +53,4 @@ public class XML_PropertiesObject extends XML_Properties {
     public Object getValue() {
         return object;
     }
-
-    @Override
-    public Object getObject() {
-        return object;
-    }
-
 }
