@@ -6,6 +6,7 @@
 package com.smartg.xml;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,10 +19,10 @@ public class XML_PropertiesMap extends XML_PropertiesImpl {
 
     private Map<String, String> map;
     private final ArrayList<XML_Property> properties = new ArrayList<>();
-    private Object key;
+    private Object keyProperty;
     protected String keyName;
     protected String valueName;
-
+    
     protected XML_PropertiesMap(String name) {
         this(name, null);
     }
@@ -70,13 +71,16 @@ public class XML_PropertiesMap extends XML_PropertiesImpl {
             XML_Property prop = new XML_PropertySimple(name);
             prop.setValue(value);
             properties.add(prop);
-            key = value;
+            keyProperty = value;
             return prop;
         } else if (getValueName().equals(name)) {
             XML_Property prop = new XML_PropertySimple(name);
             prop.setValue(value);
             properties.add(prop);
-            map.put(String.valueOf(key), String.valueOf(value));
+            HashMap<Object, Object> m = new HashMap<>();
+            m.put(keyProperty, value);
+            fireXmlEvent(new XML_Event(this, m));
+            //map.put(String.valueOf(keyProperty), String.valueOf(value));
             return prop;
         }
         return null;

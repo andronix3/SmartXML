@@ -34,6 +34,7 @@ public class XML_Stack {
     }
 
     public void start(String name, String value) {
+        //System.out.println("com.smartg.xml.XML_Stack.start() " + name);
         if (stack.isEmpty()) {
             Object t = map.get(name);
             if (t instanceof Class) {
@@ -56,6 +57,13 @@ public class XML_Stack {
             if (peek instanceof XML_Properties) {
                 XML_Properties props = (XML_Properties) peek;
                 XML_Property property = props.setProperty(name, value);
+//                try {
+//                    property = Objects.requireNonNull(property);
+//                }
+//                catch(NullPointerException ex) {
+//                    props.setProperty(name, value);
+//                    ex.printStackTrace();
+//                }
                 stack.add(property);
             } else {
                 System.err.println("Using XML_PropertySimple");
@@ -69,6 +77,7 @@ public class XML_Stack {
     }
 
     public void end(String name) {
+        //System.out.println("com.smartg.xml.XML_Stack.end() " + name);
         if (!name.equals(stack.peek().getName())) {
             throw new RuntimeException(name + " != " + stack.peek().getName());
         }

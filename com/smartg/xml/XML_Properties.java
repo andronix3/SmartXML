@@ -48,4 +48,7 @@ public interface XML_Properties extends XML_Property, Iterable<XML_Property> {
             Logger.getLogger(XML_Properties.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    XML_EventManager getEventManager();
+    void setEventManager(XML_EventManager m);
 }

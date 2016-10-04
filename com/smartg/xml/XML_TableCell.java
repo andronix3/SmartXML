@@ -5,25 +5,23 @@
  */
 package com.smartg.xml;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  *
  * @author andro
  */
-class XML_TableCell implements XML_Properties, Comparable<XML_TableCell> {
+class XML_TableCell extends XML_PropertiesAbstract implements Comparable<XML_TableCell> {
 
-    private final XML_PropertyInteger row = new XML_PropertyInteger("x");
-    private final XML_PropertyInteger column = new XML_PropertyInteger("y");
+    private final XML_PropertyInteger row = new XML_PropertyInteger("y");
+    private final XML_PropertyInteger column = new XML_PropertyInteger("x");
     private final XML_PropertySimple value = new XML_PropertySimple("cellValue");
 
     private final ArrayList<XML_Property> list = new ArrayList<>(Arrays.asList(new XML_Property[]{row, column, value}));
-
-    public XML_TableCell(Object value) {
-        this.value.setValue(value);
-    }
 
     @Override
     public String toString() {
@@ -60,11 +58,20 @@ class XML_TableCell implements XML_Properties, Comparable<XML_TableCell> {
     public XML_Property setProperty(String name, Object value) {
         switch (name) {
             case "y":
-                return column.setValue(value);
-            case "x":
                 return row.setValue(value);
+            case "x":
+                return column.setValue(value);
             case "cellValue":
-                return this.value.setValue(value);
+                this.value.setValue(value);
+
+                Map m = new HashMap();
+                m.put("x", column.getValue());
+                m.put("y", row.getValue());
+                m.put(name, value);
+                m.put("TYPE", "CELL");
+                fireXmlEvent(new XML_Event(this, m));
+
+                return this.value;
             default:
                 throw new AssertionError();
         }

@@ -5,14 +5,15 @@
  */
 package com.smartg.xml;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
  *
  * @author andro
  */
-public class XML_TableColumn implements XML_Properties {
+public class XML_TableColumn extends XML_PropertiesAbstract {
 
     private final XML_PropertyInteger columnIndex = new XML_PropertyInteger("columnIndex");
     private final XML_PropertyString columnName = new XML_PropertyString("columnName");
@@ -33,7 +34,13 @@ public class XML_TableColumn implements XML_Properties {
             case "columnIndex":
                 return columnIndex.setValue(value);
             case "columnName":
-                return columnName.setValue(value);
+                columnName.setValue(value);
+                final HashMap map = new HashMap();
+                map.put(columnIndex.getName(), columnIndex.getValue());
+                map.put(columnName.getName(), columnName.getValue());
+                map.put("TYPE", "COLUMN");
+                fireXmlEvent(new XML_Event(this, map));
+                return columnName;
             default:
                 throw new AssertionError();
         }

@@ -5,15 +5,15 @@
  */
 package com.smartg.xml;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 /**
  *
  * @author andro
  */
-class XML_TableColumns implements XML_Properties {
+class XML_TableColumns extends XML_PropertiesAbstract {
 
     private final ArrayList<XML_Property> columns = new ArrayList<>();
 
@@ -30,23 +30,31 @@ class XML_TableColumns implements XML_Properties {
         return true;
     }
 
+    private XML_TableColumn currentColumn;
+
     @Override
     public XML_Property setProperty(String name, Object value) {
+        //System.out.println("com.smartg.xml.XML_TableColumns.setProperty() {" + name + ", " + value + "} ");
         switch (name) {
+            case "column":
+                return currentColumn;
             case "width":
                 width.setValue(value);
                 final Integer w = width.getValue();
                 columns.ensureCapacity(w);
                 for (int i = 0; i < w; i++) {
                     XML_TableColumn t = new XML_TableColumn();
+                    t.setEventManager(getEventManager());
                     t.setProperty("columnIndex", i);
                     columns.add(t);
                 }
+                currentColumn = (XML_TableColumn) columns.get(0);
                 return width;
             case "columnIndex":
                 return this.columnIndex.setValue(value);
             case "columnName":
                 XML_TableColumn t = (XML_TableColumn) columns.get(columnIndex.getValue());
+                currentColumn = t;
                 return t.setProperty("columnName", value);
             default:
                 throw new AssertionError(name);

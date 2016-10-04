@@ -14,7 +14,7 @@ import javax.swing.table.TableModel;
  *
  * @author andro
  */
-public class XML_PropertiesJTable implements XML_Properties {
+public class XML_PropertiesTable extends XML_PropertiesAbstract {
 
     private final TableModel model;
 
@@ -23,29 +23,37 @@ public class XML_PropertiesJTable implements XML_Properties {
     private final XML_TableColumns tableColumns = new XML_TableColumns();
     private final XML_TableRows tableRows = new XML_TableRows();
 
-    public XML_PropertiesJTable(String name) {
-        this.name = name;
-        this.model = new DefaultTableModel();
+    public XML_PropertiesTable(String name) {
+        this(new DefaultTableModel(), name);
     }
 
-    public XML_PropertiesJTable(TableModel model, String name) {
+    public XML_PropertiesTable(TableModel model, String name) {
         this.name = name;
         this.model = model;
+
+
+        //event forwarding
+        tableColumns.setEventManager(getEventManager());
+        tableRows.setEventManager(getEventManager());
+       
         setModel(model);
     }
 
     private void setModel(TableModel model) {
         int columnCount = model.getColumnCount();
+        int rowCount = model.getRowCount();
+        if(columnCount == 0) {
+            return;
+        }
 
         //important set height first
-        setProperty("height", model.getRowCount());
-        setProperty("width", model.getColumnCount());
+        setProperty("height", rowCount);
+        setProperty("width", columnCount);
 
         for (int i = 0; i < columnCount; i++) {
             setProperty("columnIndex", i);
             setProperty("columnName", model.getColumnName(i));
         }
-        int rowCount = model.getRowCount();
         for (int r = 0; r < rowCount; r++) {
             for (int c = 0; c < columnCount; c++) {
                 //set y first
@@ -59,6 +67,10 @@ public class XML_PropertiesJTable implements XML_Properties {
     @Override
     public XML_Property setProperty(String name, Object value) {
         switch (name) {
+            case "columns":
+                return tableColumns;
+            case "rows":
+                return tableRows;
             case "height":
                 return tableRows.setProperty(name, value);
             case "width":
@@ -72,14 +84,14 @@ public class XML_PropertiesJTable implements XML_Properties {
             case "cellValue":
                 return tableRows.setProperty(name, value);
             default:
-                throw new AssertionError();
+                throw new AssertionError(name);
         }
     }
 
     @Override
     public Iterator<XML_Property> iterator() {
         ArrayList<XML_Property> list = new ArrayList<>();
-        
+
         list.add(tableRows.getHeight());
         list.add(tableRows.getWidth());
         list.add(tableColumns);

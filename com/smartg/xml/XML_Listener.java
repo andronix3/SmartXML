@@ -5,12 +5,14 @@
  */
 package com.smartg.xml;
 
+import java.util.EventListener;
+
 /**
  *
  * @author andro
  */
-public interface XML_Support<T> extends XML_Listener {
-    XML_Properties create();
-    XML_Properties create(String name);
-    T getValue();
+public interface XML_Listener extends EventListener {
+    
+    void propertySet(XML_Event e);
+    
 }

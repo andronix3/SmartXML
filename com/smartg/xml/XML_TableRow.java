@@ -5,15 +5,15 @@
  */
 package com.smartg.xml;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 /**
  *
  * @author andro
  */
-class XML_TableRow implements XML_Properties {
+class XML_TableRow extends XML_PropertiesAbstract {
 
     private final ArrayList<XML_Property> cells = new ArrayList<>();
 
@@ -21,6 +21,8 @@ class XML_TableRow implements XML_Properties {
     private final XML_PropertyInteger column = new XML_PropertyInteger("x");
 
     private final XML_PropertyInteger width = new XML_PropertyInteger("width");
+
+    private XML_TableCell tableCell;
 
     @Override
     public boolean isEmpty() {
@@ -35,28 +37,32 @@ class XML_TableRow implements XML_Properties {
     @Override
     public XML_Property setProperty(String name, Object value) {
         switch (name) {
+            case "cell":
+                return tableCell;
             case "width":
-                width.setValue(Integer.valueOf(String.valueOf(value)));
+                width.setValue(value);
                 cells.ensureCapacity(width.getValue());
                 for (int i = cells.size(); i < width.getValue(); i++) {
-                    cells.add(null);
+                    XML_TableCell cell = new XML_TableCell();
+                    cell.setEventManager(getEventManager());
+                    cells.add(cell);
                 }
-                break;
+                this.tableCell = (XML_TableCell) cells.get(0);
+                return width;
             case "x":
                 return column.setValue(value);
             case "y":
                 return row.setValue(value);
             case "cellValue":
-                XML_TableCell cell = new XML_TableCell(value);
+                XML_TableCell cell = (XML_TableCell) cells.get(column.getValue());
                 cell.setProperty("x", column.getValue());
                 cell.setProperty("y", row.getValue());
-                cells.set(column.getValue(), cell);
-                System.out.println("com.smartg.xml.XML_TableRow.setProperty() " + cell);
-                break;
+                cell.setValue(value);
+                this.tableCell = cell;
+                return cell;
             default:
-                throw new AssertionError();
+                throw new AssertionError(name);
         }
-        return this;
     }
 
     @Override

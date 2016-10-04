@@ -13,11 +13,12 @@ import java.util.Map;
  *
  * @author andro
  */
-public abstract class XML_PropertiesImpl implements XML_Properties {
+public abstract class XML_PropertiesImpl extends XML_PropertiesAbstract {
 
     private final Map<String, XML_Property> XML_MAP = new HashMap<>();
     private final String name;
     private boolean saveEmptyObjects;
+    
 
     public XML_PropertiesImpl(String name) {
         this.name = name;
@@ -32,7 +33,8 @@ public abstract class XML_PropertiesImpl implements XML_Properties {
         prop.setValue(value);
         return prop;
     }
-
+    
+    
     public boolean isRegistered(String name) {
         return XML_MAP.containsKey(name);
     }

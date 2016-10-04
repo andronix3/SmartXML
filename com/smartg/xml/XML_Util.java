@@ -5,14 +5,17 @@
  */
 package com.smartg.xml;
 
-import data.SelectedProductsList;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -97,21 +100,36 @@ public class XML_Util {
         XML_PropertiesMap xmlProperties = new XML_PropertiesMap(name, "key", "value");
         XML_SupportMap support = new XML_SupportMap(xmlProperties);
         parseXml(input, name, support);
-        return (Map) xmlProperties.getValue();
+        return support.getValue();
     }
-    
+
     public static String mapToXml(String name, Map<String, String> map) {
         XML_PropertiesMap xmlProperties = new XML_PropertiesMap(name, map, "key", "value");
         String toXml = toXml(xmlProperties);
         return toXml;
     }
 
-    private static class XML_SupportMap implements XML_Support {
+    public static TableModel xmlToTable(String input, String name) {
+        XML_PropertiesTable properties = new XML_PropertiesTable(name);
+        XML_SupportTable support = new XML_SupportTable(properties);
+        parseXml(input, name, support);
+        return support.getValue();
+    }
+
+    public static String tableToXml(String name, TableModel table) {
+        XML_PropertiesTable properties = new XML_PropertiesTable(table, name);
+        String toXml = toXml(properties);
+        return toXml;
+    }
+
+    private static class XML_SupportMap implements XML_Support<Map<String, String>> {
 
         private final XML_PropertiesMap xmlMap;
+        private final Map<String, String> map = new HashMap<>();
 
         public XML_SupportMap(XML_PropertiesMap xmlMap) {
             this.xmlMap = xmlMap;
+            xmlMap.getEventManager().addXmlEventListener(this);
         }
 
         @Override
@@ -123,6 +141,77 @@ public class XML_Util {
         public XML_Properties create(String name) {
             return xmlMap;
         }
+
+        @Override
+        public void propertySet(XML_Event e) {
+            Map<Object, Object> m = e.getMap();
+            m.forEach((k, o) -> {
+                map.put(k.toString(), o.toString());
+            });
+        }
+
+        @Override
+        public Map<String, String> getValue() {
+            return map;
+        }
+    }
+
+    private static class XML_SupportTable implements XML_Support<TableModel> {
+
+        private final XML_PropertiesTable properties;
+        private final DefaultTableModel model = new DefaultTableModel();
+        private String [] columns;
+
+        public XML_SupportTable(XML_PropertiesTable properties) {
+            this.properties = properties;
+            properties.getEventManager().addXmlEventListener(this);
+        }
+
+        @Override
+        public XML_Properties create() {
+            return properties;
+        }
+
+        @Override
+        public XML_Properties create(String name) {
+            return properties;
+        }
+
+        @Override
+        public void propertySet(XML_Event e) {
+            Map<Object, Object> map = e.getMap();
+            System.out.println("com.smartg.xml.XML_Util.XML_SupportTable.propertySet() " + map);
+            String type = (String) map.get("TYPE");
+            switch (type) {
+                case "WIDTH":
+                    Integer w = Integer.valueOf(map.get("width").toString());
+                    model.setColumnCount(w);
+                    columns = new String[w];
+                    break;
+                case "HEIGHT":
+                    Integer h = Integer.valueOf(map.get("height").toString());
+                    model.setRowCount(h);
+                    break;
+                case "COLUMN":
+                    Integer columnIndex = Integer.valueOf(map.get("columnIndex").toString());
+                    String columnName = (String) map.get("columnName");
+                    columns[columnIndex] = columnName;
+                    break;
+                case "CELL":
+                    Integer x = Integer.valueOf(map.get("x").toString());
+                    Integer y = Integer.valueOf(map.get("y").toString());
+                    Object cellValue = map.get("cellValue");
+                    model.setValueAt(cellValue, y, x);
+                    break;
+            }
+        }
+
+        @Override
+        public TableModel getValue() {
+            model.setColumnIdentifiers(columns);
+            return model;
+        }
+
     }
 
     private static XML_Properties parseXml(String input, String elementName, XML_Stack stack) {
@@ -151,7 +240,7 @@ public class XML_Util {
                 }
             }
         } catch (XMLStreamException e) {
-            Logger.getLogger(SelectedProductsList.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getGlobal().log(Level.SEVERE, null, e);
         }
         XML_Properties lastObject = (XML_Properties) stack.getLastObject();
         return lastObject;
